@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title th:text="${etudiant.id == 0 ? 'Nouvel Étudiant' : 'Modifier Étudiant'}">Étudiant</title>
+</head>
+<body>
+    <div id="content">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-person-plus me-2"></i>
+                    <span th:text="${etudiant.id == 0 ? 'Nouvel Étudiant' : 'Modifier Étudiant'}">Étudiant</span>
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a th:href="@{/etudiants}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Retour à la liste
+                    </a>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="bi bi-person-vcard me-2"></i>
+                                Informations de l'étudiant
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="${etudiant.id == 0 ? '/etudiants' : '/etudiants/' + etudiant.id}" 
+                                  method="post" th:object="${etudiant}">
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nom" class="form-label">
+                                            <i class="bi bi-person me-1"></i>Nom *
+                                        </label>
+                                        <input type="text" class="form-control" id="nom" th:field="*{nom}" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nom')}" 
+                                             th:errors="*{nom}"></div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="prenom" class="form-label">
+                                            <i class="bi bi-person me-1"></i>Prénom *
+                                        </label>
+                                        <input type="text" class="form-control" id="prenom" th:field="*{prenom}" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('prenom')}" 
+                                             th:errors="*{prenom}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">
+                                            <i class="bi bi-envelope me-1"></i>Email *
+                                        </label>
+                                        <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" 
+                                             th:errors="*{email}"></div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="numeroEtudiant" class="form-label">
+                                            <i class="bi bi-card-text me-1"></i>Numéro Étudiant *
+                                        </label>
+                                        <input type="text" class="form-control" id="numeroEtudiant" 
+                                               th:field="*{numeroEtudiant}" required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('numeroEtudiant')}" 
+                                             th:errors="*{numeroEtudiant}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="dateNaissance" class="form-label">
+                                            <i class="bi bi-calendar me-1"></i>Date de Naissance
+                                        </label>
+                                        <input type="date" class="form-control" id="dateNaissance" 
+                                               th:field="*{dateNaissance}">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('dateNaissance')}" 
+                                             th:errors="*{dateNaissance}"></div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="filiere" class="form-label">
+                                            <i class="bi bi-book me-1"></i>Filière *
+                                        </label>
+                                        <input type="text" class="form-control" id="filiere" th:field="*{filiere}" 
+                                               placeholder="Ex: Informatique, Mathématiques..." required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('filiere')}" 
+                                             th:errors="*{filiere}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="niveau" class="form-label">
+                                            <i class="bi bi-mortarboard me-1"></i>Niveau d'Étude *
+                                        </label>
+                                        <select class="form-select" id="niveau" th:field="*{niveau}" required>
+                                            <option value="">Sélectionnez un niveau</option>
+                                            <option th:each="niveau : ${niveaux}" 
+                                                    th:value="${niveau}" 
+                                                    th:text="${niveau}"
+                                                    th:selected="${niveau == etudiant.niveau}"></option>
+                                        </select>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('niveau')}" 
+                                             th:errors="*{niveau}"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            Les champs marqués d'un astérisque (*) sont obligatoires.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <a th:href="@{/etudiants}" class="btn btn-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>
+                                        Annuler
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        <span th:text="${etudiant.id == 0 ? 'Créer' : 'Modifier'}">Enregistrer</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

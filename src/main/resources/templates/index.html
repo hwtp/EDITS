@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>Tableau de Bord</title>
+</head>
+<body>
+    <div id="content">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Tableau de Bord
+                </h1>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Étudiants
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalEtudiants}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-people text-primary" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Professeurs
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalProfesseurs}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-person-badge text-success" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Mémoires
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalMemoires}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-journal-text text-info" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Soutenances
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalSoutenances}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-calendar-event text-warning" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row">
+                <!-- Mémoires par Statut -->
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="bi bi-pie-chart me-2"></i>
+                                Mémoires par Statut
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-primary me-2">En cours</span>
+                                        <span th:text="${memoiresEnCours}">0</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-warning me-2">Déposés</span>
+                                        <span th:text="${memoiresDeposes}">0</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success me-2">Validés</span>
+                                        <span th:text="${memoiresValides}">0</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-info me-2">Soutenus</span>
+                                        <span th:text="${memoiresSoutenus}">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soutenances par Statut -->
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="bi bi-bar-chart me-2"></i>
+                                Soutenances par Statut
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-warning me-2">Programmées</span>
+                                        <span th:text="${soutenancesProgrammees}">0</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-success me-2">Terminées</span>
+                                        <span th:text="${soutenancesTerminees}">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prochaines Soutenances -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                Prochaines Soutenances
+                            </h6>
+                            <a th:href="@{/soutenances}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye me-1"></i>Voir toutes
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${prochainesSoutenances.empty}" class="text-center text-muted py-4">
+                                <i class="bi bi-calendar-x" style="font-size: 3rem;"></i>
+                                <p class="mt-2">Aucune soutenance programmée</p>
+                            </div>
+                            
+                            <div th:if="${!prochainesSoutenances.empty}" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Étudiant</th>
+                                            <th>Titre du Mémoire</th>
+                                            <th>Salle</th>
+                                            <th>Durée</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="soutenance : ${prochainesSoutenances}">
+                                            <td th:text="${#temporals.format(soutenance.dateSoutenance, 'dd/MM/yyyy HH:mm')}"></td>
+                                            <td th:text="${soutenance.memoire.etudiant.nom + ' ' + soutenance.memoire.etudiant.prenom}"></td>
+                                            <td>
+                                                <a th:href="@{/memoires/{id}(id=${soutenance.memoire.id})}" 
+                                                   th:text="${#strings.abbreviate(soutenance.memoire.titre, 50)}"
+                                                   class="text-decoration-none"></a>
+                                            </td>
+                                            <td>
+                                                <i class="bi bi-geo-alt me-1"></i>
+                                                <span th:text="${soutenance.salle}"></span>
+                                            </td>
+                                            <td th:text="${soutenance.dureeMinutes + ' min'}"></td>
+                                            <td>
+                                                <span th:class="'badge ' + (${soutenance.statut.name() == 'PROGRAMMEE'} ? 'bg-warning' : 
+                                                                          ${soutenance.statut.name() == 'EN_COURS'} ? 'bg-primary' : 
+                                                                          ${soutenance.statut.name() == 'TERMINEE'} ? 'bg-success' : 'bg-secondary')"
+                                                      th:text="${soutenance.statut}"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="bi bi-lightning me-2"></i>
+                                Actions Rapides
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <a th:href="@{/etudiants/new}" class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-person-plus-fill d-block mb-2" style="font-size: 2rem;"></i>
+                                        Nouvel Étudiant
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a th:href="@{/memoires/new}" class="btn btn-outline-success w-100">
+                                        <i class="bi bi-journal-plus d-block mb-2" style="font-size: 2rem;"></i>
+                                        Nouveau Mémoire
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a th:href="@{/soutenances/new}" class="btn btn-outline-warning w-100">
+                                        <i class="bi bi-calendar-plus d-block mb-2" style="font-size: 2rem;"></i>
+                                        Nouvelle Soutenance
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a th:href="@{/soutenances/planning}" class="btn btn-outline-info w-100">
+                                        <i class="bi bi-calendar-week d-block mb-2" style="font-size: 2rem;"></i>
+                                        Planning
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

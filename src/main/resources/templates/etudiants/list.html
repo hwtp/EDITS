@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>Liste des Étudiants</title>
+</head>
+<body>
+    <div id="content">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-people me-2"></i>
+                    Étudiants
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a th:href="@{/etudiants/new}" class="btn btn-primary">
+                        <i class="bi bi-person-plus-fill me-1"></i>
+                        Nouvel Étudiant
+                    </a>
+                </div>
+            </div>
+
+            <!-- Search Form -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form th:action="@{/etudiants}" method="get" class="row g-3">
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" class="form-control" name="search" 
+                                       th:value="${search}" placeholder="Rechercher par nom ou prénom...">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-search me-1"></i>Rechercher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Students List -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Liste des Étudiants
+                        <span class="badge bg-secondary ms-2" th:text="${etudiants.size()}">0</span>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div th:if="${etudiants.empty}" class="text-center text-muted py-4">
+                        <i class="bi bi-person-x" style="font-size: 3rem;"></i>
+                        <p class="mt-2">Aucun étudiant trouvé</p>
+                        <a th:href="@{/etudiants/new}" class="btn btn-primary">
+                            <i class="bi bi-person-plus-fill me-1"></i>
+                            Ajouter le premier étudiant
+                        </a>
+                    </div>
+                    
+                    <div th:if="${!etudiants.empty}" class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>N° Étudiant</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Email</th>
+                                    <th>Filière</th>
+                                    <th>Niveau</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="etudiant : ${etudiants}">
+                                    <td>
+                                        <span class="badge bg-primary" th:text="${etudiant.numeroEtudiant}"></span>
+                                    </td>
+                                    <td th:text="${etudiant.nom}"></td>
+                                    <td th:text="${etudiant.prenom}"></td>
+                                    <td>
+                                        <a th:href="'mailto:' + ${etudiant.email}" th:text="${etudiant.email}" 
+                                           class="text-decoration-none"></a>
+                                    </td>
+                                    <td th:text="${etudiant.filiere}"></td>
+                                    <td>
+                                        <span th:class="'badge ' + (${etudiant.niveau.name() == 'LICENCE'} ? 'bg-info' : 
+                                                                    ${etudiant.niveau.name() == 'MASTER'} ? 'bg-warning' : 'bg-success')"
+                                              th:text="${etudiant.niveau}"></span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a th:href="@{/etudiants/{id}(id=${etudiant.id})}" 
+                                               class="btn btn-sm btn-outline-info" title="Voir">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a th:href="@{/etudiants/{id}/edit(id=${etudiant.id})}" 
+                                               class="btn btn-sm btn-outline-warning" title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    data-bs-toggle="modal" 
+                                                    th:data-bs-target="'#deleteModal' + ${etudiant.id}"
+                                                    title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" th:id="'deleteModal' + ${etudiant.id}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Confirmer la suppression</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Êtes-vous sûr de vouloir supprimer l'étudiant 
+                                                           <strong th:text="${etudiant.nom + ' ' + etudiant.prenom}"></strong> ?</p>
+                                                        <p class="text-danger">
+                                                            <i class="bi bi-exclamation-triangle me-1"></i>
+                                                            Cette action est irréversible.
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                            Annuler
+                                                        </button>
+                                                        <form th:action="@{/etudiants/{id}/delete(id=${etudiant.id})}" 
+                                                              method="post" class="d-inline">
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="bi bi-trash me-1"></i>Supprimer
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
