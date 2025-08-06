@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+<head>
+    <title>Tableau de bord - Gestion Mémoires</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- En-tête du tableau de bord -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-speedometer2 me-2"></i>
+                Tableau de bord
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-download me-1"></i>Exporter
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-printer me-1"></i>Imprimer
+                    </button>
+                </div>
+                <button type="button" class="btn btn-sm btn-primary">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Actualiser
+                </button>
+            </div>
+        </div>
+        
+        <!-- Messages d'erreur si présents -->
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <span th:text="${error}"></span>
+        </div>
+        
+        <!-- Cartes de statistiques principales -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                    Total Étudiants
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold" th:text="${totalEtudiants ?: 0}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-people-fill fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card success h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                    Total Mémoires
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold" th:text="${totalMemoires ?: 0}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-journal-text fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card warning h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                    Jurys Planifiés
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold" th:text="${totalJurys ?: 0}">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-calendar-event fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card danger h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                    Soutenances ce mois
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold">12</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-mortarboard-fill fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistiques détaillées -->
+        <div class="row mb-4">
+            <!-- Graphique des niveaux d'étude -->
+            <div class="col-xl-6 col-lg-7 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Répartition par niveau d'étude
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="niveauxChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Graphique des statuts de mémoires -->
+            <div class="col-xl-6 col-lg-5 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-pie-chart me-2"></i>
+                            Statuts des mémoires
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="statutsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tableaux d'informations -->
+        <div class="row">
+            <!-- Prochaines soutenances -->
+            <div class="col-xl-6 col-lg-6 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-calendar-check me-2"></i>
+                            Prochaines soutenances
+                        </h6>
+                        <a href="/jurys" th:href="@{/jurys}" class="btn btn-sm btn-primary">
+                            Voir tout
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${prochainesSoutenances != null and !prochainesSoutenances.empty}">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Étudiant</th>
+                                            <th>Date</th>
+                                            <th>Lieu</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="memoire : ${prochainesSoutenances}">
+                                            <td>
+                                                <strong th:text="${memoire.etudiant.prenom + ' ' + memoire.etudiant.nom}">Nom Étudiant</strong>
+                                                <br>
+                                                <small class="text-muted" th:text="${memoire.titre}">Titre du mémoire</small>
+                                            </td>
+                                            <td>
+                                                <span th:if="${memoire.jury != null}" 
+                                                      th:text="${#temporals.format(memoire.jury.dateHeureSoutenance, 'dd/MM/yyyy HH:mm')}">
+                                                    Date
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span th:if="${memoire.jury != null}" th:text="${memoire.jury.lieu}">Lieu</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div th:if="${prochainesSoutenances == null or prochainesSoutenances.empty}" 
+                             class="text-center text-muted py-3">
+                            <i class="bi bi-calendar-x fa-2x mb-2"></i>
+                            <p>Aucune soutenance programmée dans les 7 prochains jours</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mémoires à planifier -->
+            <div class="col-xl-6 col-lg-6 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Mémoires à planifier
+                        </h6>
+                        <a href="/memoires" th:href="@{/memoires}" class="btn btn-sm btn-warning">
+                            Planifier
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${memoiresAPlanifier != null and !memoiresAPlanifier.empty}">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Étudiant</th>
+                                            <th>Titre</th>
+                                            <th>Dépôt</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="memoire : ${memoiresAPlanifier}">
+                                            <td>
+                                                <strong th:text="${memoire.etudiant.prenom + ' ' + memoire.etudiant.nom}">Nom</strong>
+                                                <br>
+                                                <small class="text-muted" th:text="${memoire.etudiant.filiere}">Filière</small>
+                                            </td>
+                                            <td>
+                                                <span th:text="${#strings.abbreviate(memoire.titre, 50)}">Titre</span>
+                                            </td>
+                                            <td>
+                                                <span th:if="${memoire.dateDepot != null}"
+                                                      th:text="${#temporals.format(memoire.dateDepot, 'dd/MM/yyyy')}">
+                                                    Date
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div th:if="${memoiresAPlanifier == null or memoiresAPlanifier.empty}" 
+                             class="text-center text-muted py-3">
+                            <i class="bi bi-check-circle fa-2x mb-2"></i>
+                            <p>Tous les mémoires déposés sont planifiés</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions rapides -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-lightning me-2"></i>
+                            Actions rapides
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <a href="/etudiants/nouveau" th:href="@{/etudiants/nouveau}" 
+                                   class="btn btn-outline-primary btn-block w-100">
+                                    <i class="bi bi-person-plus me-2"></i>
+                                    Nouvel étudiant
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a href="/enseignants/nouveau" th:href="@{/enseignants/nouveau}" 
+                                   class="btn btn-outline-success btn-block w-100">
+                                    <i class="bi bi-person-workspace me-2"></i>
+                                    Nouvel enseignant
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a href="/memoires/nouveau" th:href="@{/memoires/nouveau}" 
+                                   class="btn btn-outline-info btn-block w-100">
+                                    <i class="bi bi-journal-plus me-2"></i>
+                                    Nouveau mémoire
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a href="/jurys/planifier" th:href="@{/jurys/planifier}" 
+                                   class="btn btn-outline-warning btn-block w-100">
+                                    <i class="bi bi-calendar-plus me-2"></i>
+                                    Planifier jury
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts spécifiques à la page d'accueil -->
+    <div layout:fragment="scripts">
+        <script th:inline="javascript">
+            // Données pour les graphiques (passées depuis le contrôleur)
+            /*<![CDATA[*/
+            const statsNiveaux = /*[[${statsNiveauxJson}]]*/ '[]';
+            const statsStatuts = /*[[${statsStatutsJson}]]*/ '[]';
+            /*]]>*/
+            
+            // Configuration du graphique des niveaux d'étude
+            const niveauxData = JSON.parse(statsNiveaux);
+            const niveauxCtx = document.getElementById('niveauxChart').getContext('2d');
+            
+            new Chart(niveauxCtx, {
+                type: 'bar',
+                data: {
+                    labels: niveauxData.map(item => item.niveau),
+                    datasets: [{
+                        label: 'Nombre d\'étudiants',
+                        data: niveauxData.map(item => item.count),
+                        backgroundColor: [
+                            'rgba(13, 110, 253, 0.8)',
+                            'rgba(25, 135, 84, 0.8)',
+                            'rgba(255, 193, 7, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(13, 110, 253, 1)',
+                            'rgba(25, 135, 84, 1)',
+                            'rgba(255, 193, 7, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Configuration du graphique des statuts de mémoires
+            const statutsData = JSON.parse(statsStatuts);
+            const statutsCtx = document.getElementById('statutsChart').getContext('2d');
+            
+            new Chart(statutsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: statutsData.map(item => item.statut),
+                    datasets: [{
+                        data: statutsData.map(item => item.count),
+                        backgroundColor: [
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(13, 110, 253, 0.8)',
+                            'rgba(25, 135, 84, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(13, 110, 253, 1)',
+                            'rgba(25, 135, 84, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Auto-refresh du tableau de bord toutes les 5 minutes
+            setInterval(function() {
+                // Ici on pourrait implémenter une mise à jour AJAX
+                console.log('Mise à jour automatique du tableau de bord');
+            }, 300000); // 5 minutes
+        </script>
+    </div>
+</body>
+</html>

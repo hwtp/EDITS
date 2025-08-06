@@ -1,0 +1,57 @@
+# Configuration principale de l'application Spring Boot
+server:
+  port: 8080  # Port d'écoute du serveur
+  servlet:
+    multipart:
+      max-file-size: 50MB      # Taille maximale d'un fichier uploadé
+      max-request-size: 100MB  # Taille maximale de la requête
+
+# Configuration de la base de données PostgreSQL
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/memoires_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    
+  # Configuration JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update  # Met à jour automatiquement le schéma de la base
+    show-sql: true      # Affiche les requêtes SQL dans les logs
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true  # Formate les requêtes SQL pour une meilleure lisibilité
+        
+  # Configuration Thymeleaf pour les templates
+  thymeleaf:
+    cache: false        # Désactive le cache en développement pour voir les changements immédiatement
+    prefix: classpath:/templates/
+    suffix: .html
+    
+  # Configuration des ressources statiques
+  web:
+    resources:
+      static-locations: classpath:/static/
+      
+  # Configuration de sécurité
+  security:
+    user:
+      name: admin       # Utilisateur par défaut
+      password: admin   # Mot de passe par défaut
+      roles: ADMIN
+
+# Configuration des logs
+logging:
+  level:
+    com.memoires: DEBUG     # Logs détaillés pour notre application
+    org.springframework.security: DEBUG  # Logs de sécurité
+    org.hibernate.SQL: DEBUG             # Logs des requêtes SQL
+    
+# Configuration personnalisée de l'application
+app:
+  upload:
+    dir: uploads/       # Répertoire de stockage des fichiers uploadés
+  pdf:
+    output-dir: generated/  # Répertoire pour les PDFs générés

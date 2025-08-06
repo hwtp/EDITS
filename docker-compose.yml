@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: memoires_db
+    environment:
+      POSTGRES_DB: memoires_db
+      POSTGRES_USER: memoires_user
+      POSTGRES_PASSWORD: memoires_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=fr_FR.UTF-8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - memoires_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memoires_user -d memoires_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Application Spring Boot
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: memoires_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Configuration de la base de données
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/memoires_db
+      SPRING_DATASOURCE_USERNAME: memoires_user
+      SPRING_DATASOURCE_PASSWORD: memoires_password
+      
+      # Configuration JPA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: false
+      
+      # Configuration des logs
+      LOGGING_LEVEL_COM_MEMOIRES: INFO
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: WARN
+      
+      # Configuration de l'upload
+      APP_UPLOAD_DIR: /app/uploads
+      APP_PDF_OUTPUT_DIR: /app/generated
+      
+      # Configuration du serveur
+      SERVER_PORT: 8080
+    volumes:
+      - uploads_data:/app/uploads
+      - generated_data:/app/generated
+    networks:
+      - memoires_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # PgAdmin pour l'administration de la base (optionnel)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: memoires_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@memoires.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - memoires_network
+    restart: unless-stopped
+    profiles:
+      - admin
+
+  # Nginx reverse proxy (optionnel pour la production)
+  nginx:
+    image: nginx:alpine
+    container_name: memoires_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    networks:
+      - memoires_network
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  # Volume persistant pour PostgreSQL
+  postgres_data:
+    driver: local
+    
+  # Volume pour les fichiers uploadés
+  uploads_data:
+    driver: local
+    
+  # Volume pour les PDFs générés
+  generated_data:
+    driver: local
+    
+  # Volume pour PgAdmin
+  pgadmin_data:
+    driver: local
+
+networks:
+  # Réseau interne pour les services
+  memoires_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
