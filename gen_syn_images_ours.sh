@@ -1,0 +1,16 @@
+CUDA_VISIBLE_DEVICES=0 python distiilation/gen_syn_image.py \
+--dataset imagenet     \
+--diffusion_checkpoints_path /diffusers/imagewoof_seed0     \
+--vae_checkpoints_path pretrain_model/sd-vae-ft-mse    \
+--guidance_scale 10     \
+--strength 0.7     \
+--ipc 10     \
+--km_expand 1     \
+--label_file_path distiilation/label-prompt/imagenet_woof_classes.txt   \
+--image_prototype prototypes/imagewoof/imagewoof-ipc10-0.7-30-kmexpand1-cluster_image_pro.json    \
+--image_prototype_path prototypes/imagewoof/imagewoof-ipc10-0.7-30-kmexpand1-cluster_image_all_path.json    \
+--save_init_image_path data/imagewoof/distilled_data-imagenet-woof-ipc10-0.7-30/   \
+--text_prototype prototypes/imagewoof/imagewoof-ipc10-0.7-30-kmexpand1-cluster_text_pro.json     \
+--seed 42 \
+--method ours \
+--do_extral_guidance 0 \

@@ -1,0 +1,15 @@
+CUDA_VISIBLE_DEVICES=0 python distiilation/gen_syn_image.py \
+--dataset imagenet     \
+--diffusion_checkpoints_path diffusers/imagewoof_seed0_vlcp     \
+--vae_checkpoints_path pretrain_model/sd-vae-ft-mse    \
+--guidance_scale 10     \
+--strength 0.7     \
+--ipc 10     \
+--km_expand 1     \
+--label_file_path distiilation/label-prompt/imagenet_woof_classes.txt   \
+--image_prototype prototypes/imagewoof/imagewoof-ipc10-0.7-30-kmexpand1-image-vclp.json    \
+--save_init_image_path data/imagewoof/distilled_data-imagenet-woof-ipc10-0.7-30-vlcp/   \
+--text_prototype prototypes/imagewoof/imagewoof-ipc10-0.7-30-kmexpand1-text-vclp.json     \
+--seed 42 \
+--method vlcp \
+--do_extral_guidance 0 \

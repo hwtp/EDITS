@@ -1,0 +1,14 @@
+CUDA_VISIBLE_DEVICES=0 python train.py  \
+-d imagenet \
+--imagenet_dir data/imagewoof/distilled_data-imagenet-woof-ipc10-0.7-30/train  /share_dir/ImageWoof \
+-n convnet \
+--depth 6 \
+--nclass 10 \
+--norm_type instance \
+--ipc 10 \
+--tag test \
+--slct_type random \
+--repeat 3 \
+--spec woof \
+--seed 42 \
+--method ours_woof \

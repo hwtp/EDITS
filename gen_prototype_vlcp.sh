@@ -1,0 +1,25 @@
+CUDA_VISIBLE_DEVICES=0 python distiilation/gen_prototype.py     \
+--batch_size 10   \
+--spec woof   \
+--size 512   \
+--contamination 0.0  \
+--data_dir share_dir/ImageWoof   \
+--dataset imagewoof    \
+--diffusion_checkpoints_path pretrain_model/stable-diffusion-v1-5    \
+--vae_checkpoints_path pretrain_model/sd-vae-ft-mse    \
+--clip_checkpoints_path pretrain_model/CLIP    \
+--ipc 10     \
+--km_expand 1     \
+--label_file_path distiilation/label-prompt/imagenet_woof_classes.txt     \
+--save_prototype_path ./prototypes/imagewoof     \
+--seed 42  \
+--metajson_file data/imagewoof/metadata.json \
+--threshold 0.7 \
+--tpk 30 \
+--method vlcp  \
+--feature_normlize  1 \
+--tau 0.01 \
+--api_key your_api_key \
+--max_tokens 120 \
+--k_image 5 \
+--k_text 5 \
