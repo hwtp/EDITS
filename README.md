@@ -28,8 +28,10 @@ You can install or upgrade the latest version of [LLava GitHub Repository](https
 ```sh
 #Generate configure for llava
 python text_generation/config_produce_llava.py
+
 # Run llava (Generate the paired text)
 python LLaVA/llava/eval/model_vqa.py  --model-path liuhaotian/llava-v1.5-7b --question-file data/output.json  --image-folder    ImageWoof/train   --answers-file  data/answer-file-our.jsonl
+
 #Arrange the file format
 python text_generation/llava_result_sum.py
 ```
