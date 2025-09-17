@@ -74,7 +74,7 @@ sh train_ours.sh
 sh train_vlcp.sh
 ```
 ## Results
-Visualation of Prototypes.<br>
+Visualization of Prototypes.<br>
 ![Overview of EDITS](figure/visualization.png)<br>
 
 ## Acknowledgments
