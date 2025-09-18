@@ -1,4 +1,4 @@
-# 📝 EDITS: Enhancing Dataset Distillation with Implicit Textual Semantics [**[arxiv](https://arxiv.org)**] [**[appendix](https://)**]  
+# 📝 EDITS: Enhancing Dataset Distillation with Implicit Textual Semantics [**[arxiv](https://arxiv.org/abs/2509.13858)**] [**[appendix](https://)**]  
 ## 🔥 Motivation
 
 Traditional learned image prototypes tend to focus on low-level visual textures such as background and illumination, failing to adequately leverage the implicit textual semantic inherent in images. This results in suboptimal prototypes and ultimately leads to performance degradation. (Top) The uniform grassy background diminishes the salience of the beagle's posture. (Bottom) The light intensity affects the state expression of the played French horn.
